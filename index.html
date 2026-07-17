@@ -1,1 +1,1029 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Python Academy</title>
+<style>
+/* ══ RESET ══════════════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
+/* ══ VARIABLES ══════════════════════════════════════════════ */
+:root{
+  --bg:#060912;
+  --panel:#0B0F1F;
+  --card:#0E1326;
+  --editor:#070B18;
+  --terminal:#050810;
+  --border:#151E38;
+  --border2:#1E2D50;
+  --white:#F0F4FF;
+  --text:#B8C8E8;
+  --muted:#4A6090;
+  --dim:#263050;
+  --ghost:#111A30;
+  --cyan:#38BEFF;
+  --mint:#00FFB3;
+  --mint2:#00CC8F;
+  --rose:#FF6BA8;
+  --gold:#FFD166;
+  --violet:#A87FFF;
+  --coral:#FF7B5C;
+  --sidebar-w:210px;
+}
+
+/* ══ BASE ════════════════════════════════════════════════════ */
+html,body{
+  height:100%;
+  background:var(--bg);
+  color:var(--white);
+  font-family:'Segoe UI',system-ui,sans-serif;
+  overflow:hidden;
+}
+
+/* ══ TOPBAR ══════════════════════════════════════════════════ */
+#topbar{
+  height:46px;
+  background:var(--panel);
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  padding:0 16px;
+  gap:10px;
+  position:fixed;
+  top:0;left:0;right:0;
+  z-index:100;
+  direction:ltr;
+  box-shadow:0 2px 20px rgba(0,0,0,0.4);
+}
+#menu-toggle{
+  display:none;
+  background:none;
+  border:none;
+  color:var(--muted);
+  font-size:20px;
+  cursor:pointer;
+  padding:4px 8px;
+  line-height:1;
+}
+#menu-toggle:hover{color:var(--white)}
+.logo-icon{
+  font-size:20px;
+  color:var(--cyan);
+  font-weight:900;
+  font-family:monospace;
+  line-height:1;
+}
+.logo-text{
+  font-size:14px;
+  font-weight:700;
+  color:var(--white);
+  letter-spacing:1px;
+  direction:ltr;
+}
+.logo-text span{color:var(--cyan)}
+#topbar-right{
+  margin-left:auto;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+#topbar-status{
+  font-size:11px;
+  color:var(--muted);
+  font-family:monospace;
+}
+
+/* ══ LAYOUT ══════════════════════════════════════════════════ */
+#layout{
+  display:flex;
+  height:calc(100vh - 46px);
+  margin-top:46px;
+  overflow:hidden;
+}
+
+/* ══ SIDEBAR ═════════════════════════════════════════════════ */
+#sidebar{
+  width:var(--sidebar-w);
+  min-width:var(--sidebar-w);
+  background:var(--panel);
+  border-left:1px solid var(--border2);
+  display:flex;
+  flex-direction:column;
+  overflow-y:auto;
+  overflow-x:hidden;
+  transition:transform 0.28s ease;
+  scrollbar-width:thin;
+  scrollbar-color:var(--dim) transparent;
+}
+#sidebar::-webkit-scrollbar{width:4px}
+#sidebar::-webkit-scrollbar-thumb{background:var(--dim);border-radius:4px}
+
+.sb-section{
+  font-size:9px;
+  font-weight:700;
+  color:var(--dim);
+  letter-spacing:2px;
+  padding:14px 14px 8px;
+  font-family:monospace;
+}
+.nav-item{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:9px 14px;
+  cursor:pointer;
+  border-right:3px solid transparent;
+  transition:background 0.15s;
+  user-select:none;
+}
+.nav-item:hover{background:var(--ghost)}
+.nav-item.active{
+  background:var(--ghost);
+  border-right-color:var(--cyan);
+}
+.nav-item.active .nav-icon{color:var(--cyan);font-weight:700}
+.nav-item.active .nav-label{color:var(--white);font-weight:600}
+.nav-icon{
+  font-size:13px;
+  color:var(--dim);
+  width:22px;
+  text-align:center;
+  transition:color 0.15s;
+  flex-shrink:0;
+}
+.nav-label{
+  font-size:12px;
+  color:var(--muted);
+  transition:color 0.15s;
+}
+.nav-item:hover .nav-icon{color:var(--text)}
+.nav-item:hover .nav-label{color:var(--white)}
+.sb-footer{
+  margin-top:auto;
+  padding:12px 14px;
+  font-size:9px;
+  color:var(--dim);
+  font-family:monospace;
+  border-top:1px solid var(--border);
+}
+
+/* ══ MAIN ════════════════════════════════════════════════════ */
+#main{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  min-width:0;
+}
+
+/* ══ LESSON HEADER ═══════════════════════════════════════════ */
+#lesson-hdr{
+  padding:12px 18px 10px;
+  background:var(--bg);
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-shrink:0;
+}
+#lesson-icon{font-size:20px;line-height:1;flex-shrink:0}
+#lesson-title-block{flex:1;min-width:0}
+#lesson-title{
+  font-size:16px;
+  font-weight:700;
+  color:var(--white);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+#lesson-sub{
+  font-size:10px;
+  color:var(--muted);
+  font-family:monospace;
+  margin-top:2px;
+}
+#quiz-btn{
+  background:var(--gold);
+  color:#050810;
+  border:none;
+  border-radius:8px;
+  padding:7px 14px;
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer;
+  white-space:nowrap;
+  flex-shrink:0;
+  transition:opacity 0.15s;
+}
+#quiz-btn:hover{opacity:0.85}
+#quiz-btn:active{opacity:0.7}
+#accent-line{
+  height:2px;
+  background:var(--cyan);
+  flex-shrink:0;
+  transition:background 0.3s;
+}
+
+/* ══ TAB BAR (mobile only) ═══════════════════════════════════ */
+#tab-bar{
+  display:none;
+  flex-shrink:0;
+  background:var(--panel);
+  border-bottom:1px solid var(--border);
+}
+.tab{
+  flex:1;
+  padding:10px;
+  text-align:center;
+  font-size:12px;
+  font-weight:700;
+  color:var(--muted);
+  cursor:pointer;
+  border-bottom:2px solid transparent;
+  transition:color 0.15s,border-color 0.15s;
+  font-family:monospace;
+  user-select:none;
+}
+.tab.active{color:var(--cyan);border-bottom-color:var(--cyan)}
+
+/* ══ PANELS ══════════════════════════════════════════════════ */
+#panels{flex:1;display:flex;overflow:hidden;min-height:0}
+
+/* ══ LECTURE ═════════════════════════════════════════════════ */
+#lecture-wrap{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  background:var(--panel);
+  border-left:1px solid var(--border);
+  min-width:0;
+  overflow:hidden;
+}
+.panel-hdr{
+  padding:8px 14px;
+  font-size:9px;
+  font-weight:700;
+  color:var(--muted);
+  font-family:monospace;
+  letter-spacing:1px;
+  background:var(--card);
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+#lecture-content{
+  flex:1;
+  overflow-y:auto;
+  padding:18px 20px;
+  scrollbar-width:thin;
+  scrollbar-color:var(--dim) transparent;
+  line-height:1.7;
+}
+#lecture-content::-webkit-scrollbar{width:4px}
+#lecture-content::-webkit-scrollbar-thumb{background:var(--dim);border-radius:4px}
+
+.sec-subtitle{
+  font-size:13px;
+  font-weight:700;
+  color:var(--white);
+  margin:14px 0 6px;
+  padding-bottom:4px;
+  border-bottom:1px solid var(--border);
+}
+.sec-body{font-size:12px;color:var(--text);margin-bottom:8px;line-height:1.7}
+.sec-code{
+  background:var(--editor);
+  color:var(--cyan);
+  font-family:'Courier New',Consolas,monospace;
+  font-size:11px;
+  padding:10px 14px;
+  border-radius:6px;
+  margin:8px 0;
+  border-right:3px solid var(--cyan);
+  white-space:pre;
+  overflow-x:auto;
+  line-height:1.6;
+  scrollbar-width:thin;
+}
+.sec-tip{
+  background:#002E22;
+  color:var(--mint);
+  font-size:11px;
+  padding:8px 14px;
+  border-radius:6px;
+  margin:8px 0;
+  border-right:3px solid var(--mint);
+  line-height:1.6;
+  white-space:pre-wrap;
+}
+.sec-warn{
+  background:#2D100A;
+  color:var(--coral);
+  font-size:11px;
+  padding:8px 14px;
+  border-radius:6px;
+  margin:8px 0;
+  border-right:3px solid var(--coral);
+  line-height:1.6;
+  white-space:pre-wrap;
+}
+.sec-rule{
+  font-size:11px;
+  color:var(--muted);
+  padding:2px 0 2px 8px;
+  font-family:monospace;
+  line-height:1.7;
+}
+.sec-badge{
+  display:inline-block;
+  background:var(--ghost);
+  color:var(--cyan);
+  font-size:10px;
+  font-weight:700;
+  font-family:monospace;
+  padding:4px 14px;
+  border-radius:4px;
+  margin-bottom:12px;
+  border:1px solid var(--border2);
+}
+.sec-spacer{height:6px}
+
+/* ══ EDITOR ══════════════════════════════════════════════════ */
+#editor-wrap{
+  width:460px;
+  flex-shrink:0;
+  display:flex;
+  flex-direction:column;
+  background:var(--editor);
+  border-left:1px solid var(--border2);
+  overflow:hidden;
+}
+#editor-titlebar{
+  background:#060A14;
+  padding:0 12px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+  direction:ltr;
+}
+.traffic{display:flex;gap:5px;padding:11px 0;flex-shrink:0}
+.dot{width:10px;height:10px;border-radius:50%}
+.dot-r{background:#FF5F57}
+.dot-y{background:#FFBD2E}
+.dot-g{background:#28CA42}
+#editor-filename{
+  font-size:11px;
+  color:var(--muted);
+  font-family:monospace;
+  flex:1;
+}
+.editor-btns{display:flex;gap:6px;align-items:center}
+#run-btn{
+  background:var(--mint);
+  color:#050810;
+  border:none;
+  border-radius:6px;
+  padding:5px 14px;
+  font-size:11px;
+  font-weight:700;
+  cursor:pointer;
+  font-family:monospace;
+  transition:opacity 0.15s;
+  white-space:nowrap;
+}
+#run-btn:hover{opacity:0.85}
+#run-btn:active{opacity:0.7}
+#run-btn:disabled{opacity:0.4;cursor:not-allowed}
+#clr-btn{
+  background:none;
+  color:var(--dim);
+  border:none;
+  font-size:16px;
+  cursor:pointer;
+  padding:4px 6px;
+  transition:color 0.15s;
+  line-height:1;
+}
+#clr-btn:hover{color:var(--muted)}
+
+#code-area{flex:1;display:flex;overflow:hidden;min-height:0}
+#line-numbers{
+  width:36px;
+  background:#050910;
+  color:var(--dim);
+  font-family:Consolas,'Courier New',monospace;
+  font-size:12px;
+  padding:12px 4px;
+  text-align:right;
+  overflow:hidden;
+  white-space:pre;
+  flex-shrink:0;
+  line-height:1.6;
+  border-left:1px solid var(--border);
+  user-select:none;
+}
+#code-editor{
+  flex:1;
+  background:var(--editor);
+  color:var(--text);
+  font-family:Consolas,'Courier New',monospace;
+  font-size:12px;
+  padding:12px 14px;
+  border:none;
+  outline:none;
+  resize:none;
+  line-height:1.6;
+  overflow:auto;
+  caret-color:var(--cyan);
+  direction:ltr;
+  text-align:left;
+  scrollbar-width:thin;
+  scrollbar-color:var(--dim) transparent;
+}
+#code-editor::-webkit-scrollbar{width:5px;height:5px}
+#code-editor::-webkit-scrollbar-thumb{background:var(--dim);border-radius:4px}
+
+/* ══ TERMINAL ════════════════════════════════════════════════ */
+#term-hdr{
+  background:var(--terminal);
+  padding:5px 14px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-top:1px solid var(--border);
+  flex-shrink:0;
+  direction:ltr;
+}
+#term-label{font-size:9px;font-weight:700;color:var(--dim);letter-spacing:1px;font-family:monospace}
+#exit-code{font-size:9px;color:var(--dim);font-family:monospace}
+#terminal{
+  height:150px;
+  background:var(--terminal);
+  color:var(--mint);
+  font-family:Consolas,'Courier New',monospace;
+  font-size:11px;
+  padding:10px 14px;
+  overflow-y:auto;
+  flex-shrink:0;
+  white-space:pre-wrap;
+  word-break:break-word;
+  line-height:1.5;
+  direction:ltr;
+  text-align:left;
+  scrollbar-width:thin;
+  scrollbar-color:var(--dim) transparent;
+}
+#terminal::-webkit-scrollbar{width:4px}
+#terminal::-webkit-scrollbar-thumb{background:var(--dim);border-radius:4px}
+.t-err{color:var(--rose)}
+.t-dim{color:var(--dim)}
+.t-gold{color:var(--gold)}
+
+/* ══ MODAL ═══════════════════════════════════════════════════ */
+#modal-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(5,8,15,0.88);
+  z-index:200;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+#modal-overlay.open{display:flex}
+#modal{
+  background:var(--card);
+  border:1px solid var(--border2);
+  border-radius:14px;
+  width:100%;
+  max-width:420px;
+  overflow:hidden;
+  box-shadow:0 0 60px rgba(0,0,0,0.6);
+}
+#modal-top{height:3px;background:var(--cyan)}
+#modal-hdr{
+  background:var(--panel);
+  padding:12px 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-bottom:1px solid var(--border);
+}
+#modal-title{font-size:13px;font-weight:700;color:var(--cyan);font-family:monospace}
+#modal-close{
+  background:none;border:none;
+  color:var(--muted);font-size:18px;
+  cursor:pointer;padding:2px 8px;
+  line-height:1;
+}
+#modal-close:hover{color:var(--white)}
+#modal-body{padding:20px 22px}
+#modal-q{
+  font-size:13px;
+  color:var(--text);
+  line-height:1.7;
+  font-family:monospace;
+  white-space:pre-wrap;
+}
+#modal-btns{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}
+.mbtn{
+  padding:9px 22px;
+  border:none;
+  border-radius:8px;
+  font-size:13px;
+  font-weight:700;
+  cursor:pointer;
+  transition:opacity 0.15s;
+}
+.mbtn:active{opacity:0.7}
+.mbtn:hover{opacity:0.85}
+.mbtn-yes{background:var(--mint);color:#050810}
+.mbtn-no{background:#2D0F1E;color:var(--rose);border:1px solid var(--rose)}
+.mbtn-cancel{background:var(--ghost);color:var(--muted);border:1px solid var(--border2)}
+#modal-result{
+  margin-top:14px;
+  padding:12px 14px;
+  border-radius:8px;
+  font-size:12px;
+  line-height:1.6;
+  font-family:monospace;
+  display:none;
+  white-space:pre-wrap;
+}
+#modal-result.correct{background:#002E22;color:var(--mint);border-right:3px solid var(--mint)}
+#modal-result.wrong{background:#2D0F1E;color:var(--rose);border-right:3px solid var(--rose)}
+
+/* ══ SIDEBAR OVERLAY (mobile) ════════════════════════════════ */
+#sb-overlay{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.6);
+  z-index:150;
+}
+#sb-overlay.open{display:block}
+
+/* ══ LOADING SCREEN ══════════════════════════════════════════ */
+#py-loading{
+  position:fixed;
+  inset:0;
+  background:var(--bg);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:16px;
+  z-index:999;
+  display:none;
+}
+#py-loading.show{display:flex}
+.spin{
+  width:36px;height:36px;
+  border:3px solid var(--border2);
+  border-top-color:var(--mint);
+  border-radius:50%;
+  animation:spin 0.8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+#py-loading p{font-size:13px;color:var(--muted);font-family:monospace}
+
+/* ══ RESPONSIVE ══════════════════════════════════════════════ */
+@media(max-width:960px){
+  :root{--sidebar-w:190px}
+  #editor-wrap{width:380px}
+}
+@media(max-width:720px){
+  :root{--sidebar-w:200px}
+  #menu-toggle{display:block}
+  #sidebar{
+    position:fixed;
+    right:0;top:46px;bottom:0;
+    transform:translateX(110%);
+    z-index:160;
+    box-shadow:-4px 0 30px rgba(0,0,0,0.5);
+    min-width:200px;
+  }
+  #sidebar.open{transform:translateX(0)}
+  #panels{flex-direction:column}
+  #editor-wrap{width:100%;border-left:none;border-top:1px solid var(--border)}
+  #tab-bar{display:flex}
+  #lecture-wrap,#editor-wrap{flex:1;min-height:0}
+  #terminal{height:120px}
+  #lesson-title{font-size:14px}
+  #quiz-btn{font-size:11px;padding:6px 10px}
+  #editor-wrap{height:100%}
+}
+@media(max-width:480px){
+  #lesson-hdr{padding:8px 12px}
+  #lesson-icon{font-size:17px}
+  #code-editor{font-size:11px}
+  #line-numbers{font-size:11px;width:30px}
+  #lecture-content{padding:14px 16px}
+  #terminal{height:110px;font-size:10px}
+}
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="py-loading">
+  <div class="spin"></div>
+  <p id="py-load-msg">جاري تحميل Python...</p>
+</div>
+
+<!-- TOPBAR -->
+<div id="topbar">
+  <button id="menu-toggle" onclick="toggleSidebar()">☰</button>
+  <span class="logo-icon">◈</span>
+  <span class="logo-text">PYTHON <span>ACADEMY</span></span>
+  <div id="topbar-right">
+    <span id="topbar-status">جاهز</span>
+  </div>
+</div>
+
+<!-- SIDEBAR OVERLAY -->
+<div id="sb-overlay" onclick="closeSidebar()"></div>
+
+<!-- LAYOUT -->
+<div id="layout">
+
+  <!-- SIDEBAR -->
+  <div id="sidebar">
+    <div class="sb-section">MODULES</div>
+    <div id="nav-list"></div>
+    <div class="sb-footer">Ziad &amp; Mohanad · v3.0</div>
+  </div>
+
+  <!-- MAIN -->
+  <div id="main">
+
+    <!-- HEADER -->
+    <div id="lesson-hdr">
+      <div id="lesson-icon">◈</div>
+      <div id="lesson-title-block">
+        <div id="lesson-title">Python Academy</div>
+        <div id="lesson-sub">اختر درساً للبدء</div>
+      </div>
+      <button id="quiz-btn" onclick="openQuiz()" style="display:none">⚡ اختبار</button>
+    </div>
+    <div id="accent-line"></div>
+
+    <!-- TABS (mobile) -->
+    <div id="tab-bar">
+      <div class="tab active" id="tab-lec" onclick="switchTab('lec')">📖 الشرح</div>
+      <div class="tab" id="tab-ed" onclick="switchTab('ed')">💻 المحرر</div>
+    </div>
+
+    <!-- PANELS -->
+    <div id="panels">
+
+      <!-- LECTURE -->
+      <div id="lecture-wrap">
+        <div class="panel-hdr">📖 LECTURE</div>
+        <div id="lecture-content"><div style="color:var(--dim);font-size:12px;padding:20px;font-family:monospace">اختر درساً من القائمة لتبدأ...</div></div>
+      </div>
+
+      <!-- EDITOR -->
+      <div id="editor-wrap">
+        <div id="editor-titlebar">
+          <div class="traffic">
+            <div class="dot dot-r"></div>
+            <div class="dot dot-y"></div>
+            <div class="dot dot-g"></div>
+          </div>
+          <span id="editor-filename">main.py</span>
+          <div class="editor-btns">
+            <button id="clr-btn" onclick="clearTerm()" title="مسح">⊘</button>
+            <button id="run-btn" onclick="runCode()">▶ Run</button>
+          </div>
+        </div>
+        <div id="code-area">
+          <div id="line-numbers">1</div>
+          <textarea id="code-editor" spellcheck="false"
+            onkeydown="onKeyDown(event)"
+            oninput="onInput()"
+            onscroll="onScroll()"
+            placeholder="# اكتب كودك هنا..."></textarea>
+        </div>
+        <div id="term-hdr">
+          <span id="term-label">▸ OUTPUT</span>
+          <span id="exit-code"></span>
+        </div>
+        <div id="terminal"><span class="t-dim">  جاهز — اختر درساً وشغّل الكود&#10;</span></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div id="modal-overlay" onclick="overlayClick(event)">
+  <div id="modal">
+    <div id="modal-top"></div>
+    <div id="modal-hdr">
+      <span id="modal-title">⚡ اختبار الدرس</span>
+      <button id="modal-close" onclick="closeQuiz()">✕</button>
+    </div>
+    <div id="modal-body">
+      <div id="modal-q"></div>
+      <div id="modal-btns">
+        <button class="mbtn mbtn-yes"    onclick="answer(true)">✓ نعم</button>
+        <button class="mbtn mbtn-no"     onclick="answer(false)">✗ لا</button>
+        <button class="mbtn mbtn-cancel" onclick="closeQuiz()">إلغاء</button>
+      </div>
+      <div id="modal-result"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════
+//  DATA
+// ══════════════════════════════════════════════════════
+var LESSONS=[{key:"welcome",nav:"Dashboard",icon:"◈",color:"#38BEFF",title:"Python Academy",sub:"بيئة تعلم تفاعلية",sections:[["badge","v 3.0 · Python 3.x · Web Edition"],["spacer",""],["subtitle","كيف تستخدم الأكاديمية؟"],["body","الواجهة مقسمة إلى لوحتين: الشرح على اليمين، ومحرر الكود على اليسار."],["spacer",""],["rule","▸  لوحة الشرح — مفاهيم وأمثلة وتنبيهات"],["rule","▸  محرر الكود — اكتب وعدّل وشغّل بـ Ctrl+Enter"],["rule","▸  Terminal — النتائج أو رسائل الخطأ"],["spacer",""],["tip","على الموبايل: استخدم التبويبات أعلى الشاشة للتنقل."]],code:'# مرحباً في Python Academy!\nimport sys\n\nname = "مبرمج المستقبل"\nprint(f"  ◈  أهلاً {name}!")\nprint(f"  ◈  Python {sys.version.split()[0]}")\n\nfor i, ch in enumerate(name):\n    stars = "★" * (i % 4 + 1)\n    print(f"  [{i:02d}]  {ch}  {stars}")',quiz:null},{key:"lesson1",nav:"Variables",icon:"①",color:"#00FFB3",title:"المتغيرات والأنواع",sub:"Variables & Data Types",sections:[["subtitle","ما هو المتغير؟"],["body","المتغير اسم مرتبط بقيمة في الذاكرة. بايثون يحدد النوع تلقائياً."],["spacer",""],["subtitle","قواعد التسمية"],["rule","✓  يبدأ بحرف أو شرطة سفلية"],["rule","✓  حساس للحالة:  age ≠ Age"],["rule","✗  لا يبدأ برقم:  1name → SyntaxError"],["rule","✗  لا مسافات:  user name → SyntaxError"],["spacer",""],["subtitle","الأنواع الأساسية"],["code","str    →  'Ziad'         # نص\nint    →  42             # صحيح\nfloat  →  3.14          # عشري\nbool   →  True / False  # منطقي"],["spacer",""],["subtitle","تحويل الأنواع"],["code","int('42')     →  42\nstr(100)      →  '100'\nfloat('3.9')  →  3.9"],["spacer",""],["tip","استخدم  type(x)  لمعرفة نوع أي متغير."],["warn","لا تستخدم أسماء الدوال كمتغيرات!\nlist = [1,2]  →  يُخفي الدالة الأصلية!"]],code:"# المتغيرات وأنواعها\nname   = 'Ziad'\nage    = 16\ngpa    = 3.95\nactive = True\n\nprint('  ┌──────────────────────────────┐')\nfor var, val in [('name',name),('age',age),('gpa',gpa),('active',active)]:\n    t = type(val).__name__\n    print(f'  │ {var:<10}│ {str(val):<10}│ {t}')\nprint('  └──────────────────────────────┘')\n\nraw = '100'\nnum = int(raw)\nprint(f'\\n  Cast: {repr(raw)} → {num}  (+50={num+50})')",quiz:{q:"هل التسمية التالية صحيحة؟\n\n  user age = 20",a:false,exp:"خطأ ─ المسافة تسبب SyntaxError.\nالصحيح:  user_age = 20"}},{key:"lesson2",nav:"Conditions",icon:"②",color:"#A87FFF",title:"الجمل الشرطية",sub:"If / elif / else",sections:[["subtitle","عوامل المقارنة"],["code","==   يساوي\n!=   لا يساوي\n>    أكبر من\n<    أصغر من\n>=   أكبر أو يساوي\n<=   أصغر أو يساوي"],["spacer",""],["warn","انتبه!\n=   للتخصيص:   x = 5\n==  للمقارنة:  x == 5"],["spacer",""],["subtitle","المسافة البادئة"],["body","بعد الكولون : لازم السطر التالي يبدأ بـ 4 مسافات — هذا جزء أساسي من اللغة."],["spacer",""],["subtitle","الشروط المركبة"],["code","and  →  كلاهما صحيح\nor   →  أحدهما صحيح\nnot  →  عكس القيمة"],["spacer",""],["tip","Ternary:\n  x = 'كبير' if age >= 18 else 'صغير'"]],code:"# الجمل الشرطية\nscore = 87\n\nif score >= 90:    grade,icon='A ممتاز','🏆'\nelif score >= 80:  grade,icon='B جيد جداً','⭐'\nelif score >= 60:  grade,icon='C مقبول','👍'\nelse:              grade,icon='F راسب','📚'\n\nprint(f'  الدرجة : {score}')\nprint(f'  التقدير: {grade} {icon}')\n\nage,has_id=20,True\nstatus='مسموح ✓' if (age>=18 and has_id) else 'مرفوض ✗'\nprint(f'\\n  الدخول: {status}')",quiz:{q:"هل هذا الكود سيعمل بدون خطأ؟\n\nif x == 5\n    print('five')",a:false,exp:"لا ─ ينقصه الكولون في نهاية السطر.\nالصحيح:  if x == 5:"}},{key:"lesson3",nav:"Loops",icon:"③",color:"#FF6BA8",title:"الحلقات التكرارية",sub:"For / While / Control",sections:[["subtitle","For Loop"],["body","استخدمها حين تعرف عدد التكرارات أو تمشي على متسلسلة."],["code","range(5)      →  0 1 2 3 4\nrange(1,6)    →  1 2 3 4 5\nrange(0,10,2) →  0 2 4 6 8"],["spacer",""],["subtitle","While Loop"],["body","تستمر طالما الشرط صحيح."],["warn","احذر الحلقة اللانهائية!\nتأكد من تعديل ينهي الشرط."],["spacer",""],["subtitle","أوامر التحكم"],["code","break     →  خروج فوري\ncontinue  →  تخطي الدورة\npass      →  لا شيء"],["spacer",""],["tip","List Comprehension:\n  [x**2 for x in range(5) if x%2==0]"]],code:"# الحلقات التكرارية\nprint('  ┌─ مربعات ────────┐')\nfor n in range(1,7):\n    bar='█'*n\n    print(f'  │  {n}²={n*n:2d}  {bar:<8}│')\nprint('  └─────────────────┘')\n\ntools=['Nmap','Wireshark','Burp','Metasploit']\ntarget='Burp'\nprint()\nfor i,t in enumerate(tools):\n    m='◉' if t==target else '○'\n    print(f'  {m} [{i}]  {t}')\n\neven_sq=[x**2 for x in range(10) if x%2==0]\nprint(f'\\n  مربعات الزوجية: {even_sq}')",quiz:{q:"هل range(1, 5) تطبع الرقم 5؟",a:false,exp:"لا ─ range(1,5) تعطي: 1 2 3 4\nالرقم الأخير دائماً مستبعد."}},{key:"lesson4",nav:"Functions",icon:"④",color:"#FFD166",title:"الدوال",sub:"def / return / Lambda",sections:[["subtitle","لماذا الدوال؟"],["body","مبدأ DRY: Don't Repeat Yourself. اكتب مرة واستدعِ لامرات."],["spacer",""],["subtitle","البنية"],["code","def func_name(param1, param2):\n    # كود\n    return value"],["spacer",""],["subtitle","أنواع المعاملات"],["code","# افتراضية\ndef greet(name, lang='ar'): ...\n\n# متعددة\ndef total(*nums): return sum(nums)\n\n# مسماة\ngreet(name='Ziad', lang='en')"],["spacer",""],["warn","كود الدالة لا يُنفَّذ تلقائياً\n— يجب استدعاؤها."],["tip","Lambda:\n  double = lambda x: x * 2"]],code:"# الدوال\ndef stats(data):\n    n=len(data)\n    return {'عدد':n,'مجموع':sum(data),'معدل':round(sum(data)/n,2),'أعلى':max(data),'أدنى':min(data)}\n\nscores=[85,92,78,96,61,88,74,99]\nr=stats(scores)\n\nprint('  ┌─ إحصاءات ───────────────────┐')\nfor k,v in r.items():\n    bar='▪'*int(v//12) if isinstance(v,(int,float)) else ''\n    print(f'  │  {k:<8}  {str(v):<8}  {bar}')\nprint('  └─────────────────────────────┘')\n\ndouble=lambda x:x*2\nprint(f'\\n  double(21) = {double(21)}')",quiz:{q:"هل كود الدالة يُنفَّذ تلقائياً عند تشغيل البرنامج؟",a:false,exp:"لا ─ الدالة تُعرَّف فقط ولا تعمل حتى تستدعيها."}},{key:"lesson5",nav:"Lists",icon:"⑤",color:"#FF7B5C",title:"القوائم",sub:"Lists / Indexing / Methods",sections:[["subtitle","الفهرسة"],["code","lst=['a','b','c','d']\nlst[0]    →  'a'       # أول\nlst[-1]   →  'd'       # آخر\nlst[1:3]  →  ['b','c'] # slice\nlst[::-1] →  عكس"],["spacer",""],["warn","الفهرس يبدأ من 0 دائماً!\nlst[0] هو العنصر الأول."],["spacer",""],["subtitle","الدوال"],["code","append(x)    →  إضافة في النهاية\ninsert(i,x)  →  إضافة في موضع\nremove(x)    →  حذف أول تطابق\npop(i)       →  حذف وإرجاع\nsort()       →  ترتيب\nlen(lst)     →  عدد العناصر"],["spacer",""],["tip","Comprehension:\n  [x**2 for x in range(6) if x%2==0]"]],code:"# القوائم\ntools=['Nmap','Wireshark','Metasploit']\ntools.append('Burp Suite')\ntools.insert(1,'Netcat')\n\nprint('  ┌─ الأدوات ──────────────┐')\nfor i,t in enumerate(tools):\n    m='◉' if i==0 else '○'\n    print(f'  │  {m} [{i}]  {t}')\nprint('  └────────────────────────┘')\n\nprint(f'\\n  أول ثلاث : {tools[:3]}')\nprint(f'  آخر اثنان: {tools[-2:]}')\n\nscores=[72,88,54,95,61,79]\npassed=[s for s in scores if s>=60]\nfailed=[s for s in scores if s<60]\nprint(f'\\n  ✓ ناجح({len(passed)}): {passed}')\nprint(f'  ✗ راسب({len(failed)}): {failed}')",quiz:{q:"ما فهرس العنصر الأول؟\nهل هو [1]؟",a:false,exp:"لا ─ الفهرس يبدأ من 0.\nlst[0]  →  أول عنصر"}},{key:"lesson6",nav:"Dictionaries",icon:"⑥",color:"#38BEFF",title:"القواميس",sub:"Dict / Key-Value",sections:[["subtitle","البنية"],["code","d = {\n    'name': 'Ziad',\n    'age':  16\n}"],["spacer",""],["subtitle","الوصول والتعديل"],["code","d['name']         →  'Ziad'\nd.get('x','N/A')  →  'N/A'\nd['age'] = 17     →  تحديث\nd['city']='Cairo' →  إضافة\ndel d['name']     →  حذف"],["spacer",""],["warn","d['key'] يُطلق KeyError إذا لم يوجد.\nاستخدم d.get() للوصول الآمن."],["spacer",""],["subtitle","التكرار"],["code","d.keys()    →  المفاتيح\nd.values()  →  القيم\nd.items()   →  (مفتاح, قيمة)"],["spacer",""],["tip","dict comprehension:\n  {k:v*2 for k,v in d.items()}"]],code:"# القواميس\nplayer={'name':'Ziad','level':42,'xp':8750,'skills':['Python','Linux']}\n\nprint('  ╔══════════════════════════╗')\nfor k,v in player.items():\n    if isinstance(v,list): v=', '.join(v)\n    print(f'  ║  {k:<10}  {str(v)}')\nprint('  ╚══════════════════════════╝')\n\nplayer['level']+=1\nplayer['rank']='Elite'\nprint(f'\\n  Level: {player[\"level\"]}')\nprint(f'  Rank : {player[\"rank\"]}')\nprint(f'  Guild: {player.get(\"guild\",\"لا توجد\")}')",quiz:{q:"هل القاموس يُنشأ بالأقواس المربعة [ ]؟",a:false,exp:"لا ─  { }  للقواميس\n      [ ]  للقوائم"}},{key:"lesson7",nav:"Strings",icon:"⑦",color:"#00FFB3",title:"معالجة النصوص",sub:"String Methods / f-strings",sections:[["subtitle","دوال التحويل"],["code","upper()  →  'HELLO'\nlower()  →  'hello'\ntitle()  →  'Hello World'\nstrip()  →  إزالة المسافات"],["spacer",""],["subtitle","البحث والاستبدال"],["code","find('l')        →  2\ncount('l')       →  2\nreplace('l','★') →  'He★★o'\nsplit(' ')       →  قائمة\n' '.join(lst)    →  دمج"],["spacer",""],["subtitle","f-strings"],["code","name,score='Ziad',97.3\nf'{name.upper()}'  →  'ZIAD'\nf'{score:.2f}'     →  '97.30'"],["spacer",""],["tip","'sub' in 'text'  →  True/False"]],code:"# النصوص\nraw='  Cyber Security Academy  '\nc=raw.strip()\nprint(f'  أصلي: │{raw}│')\nprint(f'  نظيف: │{c}│')\nprint(f'  كبير: {c.upper()}')\nprint(f'  عنوان:{c.title()}')\n\nwords=c.split()\nprint(f'\\n  كلمات: {words}')\nprint(f'  بنجوم: {\" ★ \".join(words)}')\n\ntext='python is great and python is fun'\nprint(f'\\n  عدد  : {text.count(\"python\")}')\nprint(f'  استبدال: {text.replace(\"python\",\"🐍\",1)}')",quiz:{q:"هل  'hello'.upper()  تعطي  'HELLO'؟",a:true,exp:"نعم ─ upper() تحول كل الأحرف الصغيرة إلى كبيرة."}},{key:"lesson8",nav:"Input",icon:"⑧",color:"#A87FFF",title:"مدخلات المستخدم",sub:"input() / Casting",sections:[["subtitle","دالة input()"],["body","تُوقف البرنامج وتنتظر كتابة المستخدم. تُرجع str دائماً."],["spacer",""],["warn","age=input('العمر: ')  # '18' نصاً\nage+1   →  TypeError!"],["spacer",""],["subtitle","الحل: تحويل النوع"],["code","age=int(input('العمر: '))\nprice=float(input('السعر: '))\n\ntry:\n    age=int(input('العمر: '))\nexcept ValueError:\n    print('رقم غير صالح!')"],["spacer",""],["tip","في المحاكي استخدم قيماً مباشرة بدل input()"]],code:"# محاكاة المدخلات\nraw_age='18'\nraw_score='87.5'\n\nage=int(raw_age)\nscore=float(raw_score)\n\nprint('  ┌──────────────────────────────┐')\nprint('  │  قبل        │  بعد          │')\nprint('  ├──────────────────────────────┤')\nprint(f'  │ {repr(raw_age):<13}│ {age:<14}│')\nprint(f'  │ {repr(raw_score):<13}│ {score:<14}│')\nprint('  └──────────────────────────────┘')\n\nprint(f'\\n  العمر+5   = {age+5}')\nprint(f'  الدرجة×2 = {score*2}')\n\nfor v in ['25','abc','007','']:\n    print(f'  {repr(v):<10} → {\"✓\" if v.isdigit() else \"✗\"}')",quiz:{q:"كتب المستخدم '5' في input().\nهل يمكن جمعها مع 2 مباشرة؟",a:false,exp:"لا ─ input() تُرجع str دائماً.\nيجب:  int(input()) + 2"}},{key:"lesson9",nav:"Try/Except",icon:"⑨",color:"#FF6BA8",title:"معالجة الأخطاء",sub:"try / except / finally",sections:[["subtitle","البنية الكاملة"],["code","try:\n    # الكود الخطر\nexcept TypeError:\n    # خطأ نوع\nexcept ValueError as e:\n    print(e)\nexcept Exception as e:\n    # أي خطأ\nelse:\n    # إذا لم يحدث خطأ\nfinally:\n    # ينفذ دائماً"],["spacer",""],["subtitle","أشهر الاستثناءات"],["code","ZeroDivisionError → قسمة على 0\nValueError        → قيمة غير صالحة\nTypeError         → نوع غير متوافق\nKeyError          → مفتاح غير موجود\nIndexError        → فهرس خارج الحدود"],["spacer",""],["tip","raise لرمي استثناء:\n  raise ValueError('رسالة')"],["warn","تجنب  except Exception  وحدها في الإنتاج."]],code:"# معالجة الأخطاء\ndef safe_op(a,b,op):\n    try:\n        if op=='div':  r=a/b\n        elif op=='idx':r=[1,2,3][a]\n        elif op=='key':r={'x':10}[b]\n        elif op=='cast':r=int(a)\n    except ZeroDivisionError: return '✗ ZeroDivisionError'\n    except IndexError:        return f'✗ IndexError [{a}]'\n    except KeyError:          return f'✗ KeyError \"{b}\"'\n    except(ValueError,TypeError)as e:return f'✗ {type(e).__name__}'\n    else: return f'✓ {r}'\n\ntests=[(10,2,'div'),(10,0,'div'),(1,None,'idx'),(5,None,'idx'),(10,'z','key'),('x',None,'cast')]\ndescs=['10/2','10/0','list[1]','list[5]','dict[z]','int(x)']\n\nprint('  ┌───────────┬───────────────────────┐')\nfor(a,b,op),d in zip(tests,descs):\n    r=safe_op(a,b,op)\n    print(f'  │ {d:<10}│ {r}')\nprint('  └───────────┴───────────────────────┘')",quiz:{q:"هل try/except يمنع البرنامج من التوقف التام؟",a:true,exp:"نعم ─ هذا هدفه الأساسي.\nيلتقط الخطأ ويمنع الـ Crash."}},{key:"lesson10",nav:"Files",icon:"⑩",color:"#00FFB3",title:"التعامل مع الملفات",sub:"open() / read / write",sections:[["subtitle","الأوضاع"],["code","'r'   →  قراءة (افتراضي)\n'w'   →  كتابة (يمسح القديم)\n'a'   →  إضافة في النهاية\n'x'   →  إنشاء جديد"],["spacer",""],["subtitle","أسلوب with"],["code","with open('file.txt','r') as f:\n    content = f.read()\n# الملف مغلق تلقائياً"],["spacer",""],["subtitle","طرق القراءة"],["code","f.read()       →  كل المحتوى\nf.readlines()  →  قائمة أسطر\nfor line in f: →  سطراً بسطر"],["spacer",""],["warn","حدد الترميز دائماً:\nopen('f.txt', encoding='utf-8')"],["tip","os.path.exists() للتحقق قبل الفتح."]],code:"# الملفات\nimport os,tempfile\n\nfpath=os.path.join(tempfile.gettempdir(),'academy.txt')\n\nlines=['Python Academy — سجل التقدم\\n','─'*30+'\\n','① Variables ✓\\n','② Conditions ✓\\n','⑩ Files ✓\\n']\n\nwith open(fpath,'w',encoding='utf-8') as f:\n    f.writelines(lines)\nprint(f'  ✓ كُتب: {os.path.basename(fpath)}')\nprint(f'  ✓ الحجم: {os.path.getsize(fpath)} bytes')\n\nprint('\\n  ── المحتوى ──')\nwith open(fpath,'r',encoding='utf-8') as f:\n    for i,line in enumerate(f,1):\n        print(f'  {i:02d}│ {line}',end='')\n\nos.remove(fpath)\nprint('\\n\\n  ✓ حُذف الملف المؤقت')",quiz:{q:"هل يجب كتابة file.close() عند استخدام with open؟",a:false,exp:"لا ─ with يغلق الملف تلقائياً."}}];
+
+// ══════════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════════
+var currentLesson = LESSONS[0];
+var currentTab = 'lec';
+var pyodide = null;
+var pyReady = false;
+var pyLoading = false;
+
+// ══════════════════════════════════════════════════════
+//  BUILD NAV
+// ══════════════════════════════════════════════════════
+function buildNav(){
+  var nav = document.getElementById('nav-list');
+  LESSONS.forEach(function(l){
+    var d = document.createElement('div');
+    d.className = 'nav-item';
+    d.id = 'nav-'+l.key;
+    d.innerHTML = '<span class="nav-icon">'+l.icon+'</span><span class="nav-label">'+l.nav+'</span>';
+    d.onclick = function(){ loadLesson(l); };
+    nav.appendChild(d);
+  });
+}
+
+// ══════════════════════════════════════════════════════
+//  LOAD LESSON
+// ══════════════════════════════════════════════════════
+function loadLesson(l){
+  currentLesson = l;
+  closeSidebar();
+
+  document.querySelectorAll('.nav-item').forEach(function(el){ el.classList.remove('active'); });
+  document.getElementById('nav-'+l.key).classList.add('active');
+
+  document.getElementById('lesson-icon').textContent = l.icon;
+  document.getElementById('lesson-title').textContent = l.title;
+  document.getElementById('lesson-sub').textContent = l.sub;
+  document.getElementById('accent-line').style.background = l.color;
+  document.getElementById('topbar-status').textContent = l.nav;
+
+  var qb = document.getElementById('quiz-btn');
+  if(l.quiz){
+    qb.style.display = '';
+    qb.style.background = l.color;
+  } else {
+    qb.style.display = 'none';
+  }
+
+  // Lecture
+  var html = '';
+  l.sections.forEach(function(s){
+    var type=s[0], text=s[1];
+    var t = text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    if(type==='badge')    html+='<div class="sec-badge">'+t+'</div>';
+    else if(type==='subtitle') html+='<div class="sec-subtitle">'+t+'</div>';
+    else if(type==='body')     html+='<div class="sec-body">'+t+'</div>';
+    else if(type==='code')     html+='<div class="sec-code">'+t+'</div>';
+    else if(type==='tip')      html+='<div class="sec-tip">✦  '+t+'</div>';
+    else if(type==='warn')     html+='<div class="sec-warn">⚠  '+t+'</div>';
+    else if(type==='rule')     html+='<div class="sec-rule">'+t+'</div>';
+    else if(type==='spacer')   html+='<div class="sec-spacer"></div>';
+  });
+  var lc = document.getElementById('lecture-content');
+  lc.innerHTML = html;
+  lc.scrollTop = 0;
+
+  // Editor
+  var ed = document.getElementById('code-editor');
+  ed.value = l.code || '';
+  updateLines();
+  clearTerm();
+  termWrite('  ──  '+l.nav+'  ──\n  Ctrl+Enter لتشغيل الكود\n','dim');
+}
+
+// ══════════════════════════════════════════════════════
+//  EDITOR HELPERS
+// ══════════════════════════════════════════════════════
+function onKeyDown(e){
+  if(e.key==='Tab'){
+    e.preventDefault();
+    var ta=e.target, s=ta.selectionStart, end=ta.selectionEnd;
+    ta.value=ta.value.substring(0,s)+'    '+ta.value.substring(end);
+    ta.selectionStart=ta.selectionEnd=s+4;
+    updateLines();
+  }
+  if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){
+    e.preventDefault();
+    runCode();
+  }
+}
+function onInput(){ updateLines(); }
+function onScroll(){
+  var ta=document.getElementById('code-editor');
+  document.getElementById('line-numbers').scrollTop=ta.scrollTop;
+}
+function updateLines(){
+  var ta=document.getElementById('code-editor');
+  var n=ta.value.split('\n').length;
+  var arr=[];
+  for(var i=1;i<=n;i++) arr.push(i);
+  document.getElementById('line-numbers').textContent=arr.join('\n');
+}
+
+// ══════════════════════════════════════════════════════
+//  TERMINAL
+// ══════════════════════════════════════════════════════
+function termWrite(text, cls){
+  var t=document.getElementById('terminal');
+  var sp=document.createElement('span');
+  if(cls==='err') sp.className='t-err';
+  else if(cls==='dim') sp.className='t-dim';
+  else if(cls==='gold') sp.className='t-gold';
+  sp.textContent=text;
+  t.appendChild(sp);
+  t.scrollTop=t.scrollHeight;
+}
+function clearTerm(){
+  document.getElementById('terminal').innerHTML='';
+  document.getElementById('exit-code').textContent='';
+}
+
+// ══════════════════════════════════════════════════════
+//  RUN CODE (Pyodide)
+// ══════════════════════════════════════════════════════
+function setRunBtn(state, text){
+  var btn=document.getElementById('run-btn');
+  btn.disabled = !state;
+  btn.textContent = text || '▶ Run';
+}
+
+async function initPyodide(){
+  if(pyReady) return true;
+  if(pyLoading) return false;
+  pyLoading=true;
+
+  document.getElementById('py-load-msg').textContent='جاري تحميل Python...';
+  document.getElementById('py-loading').classList.add('show');
+
+  try{
+    pyodide = await loadPyodide({
+      indexURL:'https://cdn.jsdelivr.net/pyodide/v0.25.1/full/'
+    });
+    pyReady=true;
+    document.getElementById('py-loading').classList.remove('show');
+    return true;
+  } catch(err){
+    document.getElementById('py-load-msg').textContent='فشل تحميل Python: '+err.message;
+    setTimeout(function(){
+      document.getElementById('py-loading').classList.remove('show');
+    },3000);
+    pyLoading=false;
+    return false;
+  }
+}
+
+async function runCode(){
+  var code=document.getElementById('code-editor').value.trim();
+  if(!code) return;
+
+  setRunBtn(false,'⏳ جاري...');
+  document.getElementById('topbar-status').textContent='تنفيذ...';
+  clearTerm();
+  termWrite('  ⏳  جاري التنفيذ...\n','gold');
+
+  var ok = await initPyodide();
+  if(!ok){
+    setRunBtn(true);
+    termWrite('  ✗  فشل تحميل Python. تأكد من الاتصال بالإنترنت.\n','err');
+    document.getElementById('exit-code').textContent='✗ error';
+    document.getElementById('exit-code').style.color='var(--rose)';
+    document.getElementById('topbar-status').textContent='✗ خطأ';
+    return;
+  }
+
+  var out='', err='';
+  pyodide.setStdout({batched:function(s){ out+=s+'\n'; }});
+  pyodide.setStderr({batched:function(s){ err+=s+'\n'; }});
+
+  try{
+    await pyodide.runPythonAsync(code);
+    clearTerm();
+    if(out) termWrite(out);
+    if(err) termWrite(err,'err');
+    if(!out&&!err) termWrite('  (لا يوجد مخرجات)\n','dim');
+    document.getElementById('exit-code').textContent='✓ exit:0';
+    document.getElementById('exit-code').style.color='var(--mint)';
+    document.getElementById('topbar-status').textContent='✓ اكتمل';
+  } catch(e){
+    clearTerm();
+    termWrite(String(e),'err');
+    document.getElementById('exit-code').textContent='✗ exit:1';
+    document.getElementById('exit-code').style.color='var(--rose)';
+    document.getElementById('topbar-status').textContent='✗ خطأ';
+  }
+
+  setRunBtn(true);
+}
+
+// ══════════════════════════════════════════════════════
+//  QUIZ
+// ══════════════════════════════════════════════════════
+var quizDone=false;
+function openQuiz(){
+  if(!currentLesson.quiz) return;
+  quizDone=false;
+  document.getElementById('modal-q').textContent=currentLesson.quiz.q;
+  document.getElementById('modal-result').style.display='none';
+  document.getElementById('modal-result').className='';
+  document.getElementById('modal-btns').style.display='flex';
+  document.getElementById('modal-top').style.background=currentLesson.color;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function closeQuiz(){
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+function overlayClick(e){
+  if(e.target===document.getElementById('modal-overlay')) closeQuiz();
+}
+function answer(val){
+  if(quizDone) return;
+  quizDone=true;
+  var q=currentLesson.quiz;
+  var ok=(val===q.a);
+  var res=document.getElementById('modal-result');
+  res.style.display='block';
+  res.className=(ok?'correct':'wrong');
+  res.textContent=(ok?'✓  أحسنت!\n\n':'✗  إجابة خاطئة\n\n')+q.exp;
+  document.getElementById('modal-btns').style.display='none';
+}
+
+// ══════════════════════════════════════════════════════
+//  MOBILE
+// ══════════════════════════════════════════════════════
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sb-overlay').classList.toggle('open');
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sb-overlay').classList.remove('open');
+}
+function switchTab(tab){
+  currentTab=tab;
+  document.getElementById('tab-lec').classList.toggle('active', tab==='lec');
+  document.getElementById('tab-ed').classList.toggle('active', tab==='ed');
+  document.getElementById('lecture-wrap').style.display= tab==='lec'?'flex':'none';
+  document.getElementById('editor-wrap').style.display= tab==='ed'?'flex':'none';
+}
+function applyLayout(){
+  var mobile=window.innerWidth<=720;
+  if(!mobile){
+    document.getElementById('lecture-wrap').style.display='flex';
+    document.getElementById('editor-wrap').style.display='flex';
+  } else {
+    switchTab(currentTab);
+  }
+}
+window.addEventListener('resize', applyLayout);
+
+// ══════════════════════════════════════════════════════
+//  PYODIDE LOADER
+// ══════════════════════════════════════════════════════
+function loadPyodideScript(){
+  return new Promise(function(resolve,reject){
+    if(window.loadPyodide){ resolve(); return; }
+    var s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/pyodide/v0.25.1/full/pyodide.js';
+    s.onload=resolve;
+    s.onerror=reject;
+    document.head.appendChild(s);
+  });
+}
+
+// ══════════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════════
+buildNav();
+loadLesson(LESSONS[0]);
+applyLayout();
+loadPyodideScript().catch(function(){});
+</script>
+</body>
+</html>
